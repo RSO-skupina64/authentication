@@ -17,6 +17,10 @@
     <properties>
         <java.version>17</java.version>
 		<springdoc.version>1.6.11</springdoc.version>
+        <springboot.validation.version>2.7.5</springboot.validation.version>
+        <springboot.security.version>2.7.5</springboot.security.version>
+        <springboot.jpa.version>2.7.5</springboot.jpa.version>
+        <jsonwebtoken.security.version>0.9.1</jsonwebtoken.security.version>
     </properties>
     <dependencies>
         <dependency>
@@ -29,6 +33,37 @@
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>${springdoc.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>${springboot.validation.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>${springboot.security.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jsonwebtoken.security.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${springboot.jpa.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

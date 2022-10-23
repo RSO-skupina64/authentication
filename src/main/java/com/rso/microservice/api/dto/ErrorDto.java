@@ -1,25 +1,32 @@
-package com.rso.microservice.api.model;
+package com.rso.microservice.api.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
-public class ErrorModel {
+public class ErrorDto {
 
-    private Integer statusCode;
+    @JsonProperty("error_code")
+    private Integer errorCode;
+
+    @JsonProperty("message")
     private String message;
+
+    @JsonProperty("timestamp")
     private LocalDateTime timestamp;
 
-    public ErrorModel(Integer statusCode, String message, LocalDateTime timestamp) {
-        this.statusCode = statusCode;
+    public ErrorDto(Integer errorCode, String message, LocalDateTime timestamp) {
+        this.errorCode = errorCode;
         this.message = message;
         this.timestamp = timestamp;
     }
 
-    public Integer getStatusCode() {
-        return statusCode;
+    public Integer getErrorCode() {
+        return errorCode;
     }
 
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
+    public void setErrorCode(Integer errorCode) {
+        this.errorCode = errorCode;
     }
 
     public String getMessage() {

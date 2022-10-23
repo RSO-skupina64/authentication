@@ -1,10 +1,10 @@
-package com.rso.microservice.api.model;
+package com.rso.microservice.api.dto;
 
-public class PingModel {
+public class PingDto {
 
     private String response;
 
-    public PingModel(String response) {
+    public PingDto(String response) {
         this.response = response;
     }
 

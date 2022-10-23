@@ -1,6 +1,6 @@
 package com.rso.microservice.api;
 
-import com.rso.microservice.api.model.PingModel;
+import com.rso.microservice.api.dto.PingDto;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,12 +17,12 @@ public class HealthcheckAPI {
 
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Application is running",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PingModel.class))}
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PingDto.class))}
             )
     })
     @GetMapping("/ping")
-    public ResponseEntity<PingModel> ping() {
-        return ResponseEntity.status(HttpStatus.OK).body(new PingModel("pong"));
+    public ResponseEntity<PingDto> ping() {
+        return ResponseEntity.status(HttpStatus.OK).body(new PingDto("pong"));
     }
 
 }
