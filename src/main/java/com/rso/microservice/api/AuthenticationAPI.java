@@ -93,4 +93,20 @@ public class AuthenticationAPI {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
+    @PutMapping(value = "/check-user-role", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Check user's role fits",
+            description = "Check if user has role that is specified in the request")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User role matches requested",
+                    content = @Content(schema = @Schema(implementation = RegistrationResponseDto.class))),
+            @ApiResponse(responseCode = "400", description = "User role doesn't match requested",
+                    content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorDto.class)))
+    })
+    public ResponseEntity<LoginResponseDto> checkUserRole() {
+        // todo: add code here
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    }
+
 }
