@@ -2,16 +2,22 @@ package com.rso.microservice.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 public class LoginRequestDto {
 
     @JsonProperty("username")
     @NotBlank(message = "is required.")
+    @Min(5)
+    @Max(20)
     private String username;
 
     @JsonProperty("password")
     @NotBlank(message = "is required.")
+    @Min(7)
+    @Max(20)
     private String password;
 
     public String getUsername() {
