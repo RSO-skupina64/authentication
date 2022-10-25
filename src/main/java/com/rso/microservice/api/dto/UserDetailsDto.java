@@ -1,6 +1,7 @@
 package com.rso.microservice.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
@@ -24,8 +25,7 @@ public class UserDetailsDto {
 
     @JsonProperty("username")
     @NotBlank(message = " is required.")
-    @Min(5)
-    @Max(20)
+    @Length(min = 5, max = 20)
     private String username;
 
     public String getEmail() {

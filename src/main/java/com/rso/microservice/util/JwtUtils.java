@@ -1,28 +1,24 @@
 package com.rso.microservice.util;
 
 import io.jsonwebtoken.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Date;
 
 public class JwtUtils {
 
     public static final int jwtExpiration = 50000;
     public static final String jwtSecret = "secret";
 
-    public static String generateJwtToken(Authentication authentication) {
-        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-
-        Date currentDate = new Date();
-
-        return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
-                .setIssuedAt(currentDate)
-                .setExpiration(new Date(currentDate.getTime() + jwtExpiration))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
-    }
+//    public static String generateJwtToken(Authentication authentication) {
+//        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+//
+//        Date currentDate = new Date();
+//
+//        return Jwts.builder()
+//                .setSubject(userPrincipal.getUsername())
+//                .setIssuedAt(currentDate)
+//                .setExpiration(new Date(currentDate.getTime() + jwtExpiration))
+//                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+//                .compact();
+//    }
 
     public static String getUsernameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
