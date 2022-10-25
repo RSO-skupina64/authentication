@@ -1,57 +1,75 @@
 package com.rso.microservice.api;
 
+import com.rso.microservice.api.dto.ChangePasswordRequestDto;
 import com.rso.microservice.api.dto.ErrorDto;
-import com.rso.microservice.api.dto.LoginResponseDto;
-import com.rso.microservice.api.dto.RegistrationResponseDto;
+import com.rso.microservice.api.dto.UserDetailsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/profile")
 @Tag(name = "Profile")
 public class UserProfileAPI {
 
-    @GetMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Get User extended info",
+    @GetMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get logged in User extended info",
             description = "Get profile information about currently logged in user")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "User information successfully fetched",
-                    content = @Content(schema = @Schema(implementation = RegistrationResponseDto.class))),
+                    content = @Content(schema = @Schema(implementation = UserDetailsDto.class))),
             @ApiResponse(responseCode = "400", description = "User not authenticated",
+                    content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found",
                     content = @Content(schema = @Schema(implementation = ErrorDto.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
-    public ResponseEntity<LoginResponseDto> getUserProfile() {
+    public ResponseEntity<UserDetailsDto> getUserProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt) {
         // todo: add code here
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Update User info",
+    @PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Update User profile",
             description = "Update profile information about currently logged in user")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "User profile update successful",
-                    content = @Content(schema = @Schema(implementation = RegistrationResponseDto.class))),
+            @ApiResponse(responseCode = "204", description = "User profile update successful"),
             @ApiResponse(responseCode = "400", description = "User not authenticated",
+                    content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found",
                     content = @Content(schema = @Schema(implementation = ErrorDto.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
-    public ResponseEntity<LoginResponseDto> updateUserProfile() {
+    public ResponseEntity<?> updateUserProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt, @Valid @RequestBody UserDetailsDto userDetails) {
         // todo: add code here
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
+    @PutMapping(value = "/user/change-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Change user password", description = "Changes user password")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "User profile update successful"),
+            @ApiResponse(responseCode = "400", description = "User not authenticated",
+                    content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "User not found",
+                    content = @Content(schema = @Schema(implementation = ErrorDto.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(schema = @Schema(implementation = ErrorDto.class)))
+    })
+    public ResponseEntity<?> changePassword(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt, @Valid @RequestBody ChangePasswordRequestDto changePasswordRequest) {
+        // todo: add code here
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    }
 }

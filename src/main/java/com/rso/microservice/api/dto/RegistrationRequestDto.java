@@ -3,18 +3,26 @@ package com.rso.microservice.api.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
 public class RegistrationRequestDto {
 
     @NotBlank(message = "is required.")
     @JsonProperty("username")
+    @Min(5)
+    @Max(20)
     private String username;
     @NotBlank(message = "is required.")
     @JsonProperty("password")
+    @Min(7)
+    @Max(20)
     private String password;
     @NotBlank(message = "is required.")
     @JsonProperty("repeat_password")
+    @Min(7)
+    @Max(20)
     private String repeatPassword;
 
     @NotBlank(message = "is required.")

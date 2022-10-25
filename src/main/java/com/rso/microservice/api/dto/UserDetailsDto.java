@@ -1,0 +1,62 @@
+package com.rso.microservice.api.dto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+
+public class UserDetailsDto {
+
+    @JsonProperty("email")
+    @NotBlank(message = " is required.")
+    @Email
+    private String email;
+
+    @JsonProperty("name")
+    @NotBlank(message = " is required.")
+    private String name;
+
+    @JsonProperty("last_name")
+    @NotBlank(message = " is required.")
+    private String lastName;
+
+    @JsonProperty("username")
+    @NotBlank(message = " is required.")
+    @Min(5)
+    @Max(20)
+    private String username;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+}
