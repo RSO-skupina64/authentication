@@ -1,4 +1,4 @@
-package com.rso.microservice.api.handler;
+package com.rso.microservice.error;
 
 import com.rso.microservice.api.AuthenticationAPI;
 import com.rso.microservice.api.dto.ErrorDto;
