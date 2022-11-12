@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.rso</groupId>
-    <artifactId>microservice</artifactId>
+    <artifactId>authentication</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>authentication</name>
 
