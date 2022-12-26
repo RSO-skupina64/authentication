@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authentication-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authentication
+  template:
+    metadata:
+      labels:
+        app: authentication
+    spec:
+      containers:
+        - image: as9721/authentication:2022-11-16-21-23-10
+          name: authentication
+          ports:
+            - containerPort: 8080
+              name: server
+              protocol: TCP
+          env:
+            - name: spring.datasource.url
+              value: jdbc:mysql://primerjalnik-cen-server.mysql.database.azure.com:3306/primerjalnik-cen?useSSL=true
+            - name: spring.datasource.username
+              value: adminRso
+            - name: spring.datasource.password
+              value: Rso2022@
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: authentication
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8082
+      protocol: TCP
+      targetPort: server
+  selector:
+    app: authentication
