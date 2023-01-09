@@ -1,42 +1,36 @@
 package com.rso.microservice.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 @Entity
-@Table(name = "User")
+@Table(name = "USER")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(name = "NAME", length = 100, nullable = false)
     private String name;
 
-    @NotBlank
+    @Column(name = "LAST_NAME", length = 100, nullable = false)
     private String lastName;
 
-    @NotBlank
-    @Email
+    @Column(name = "EMAIL", length = 100, nullable = false, unique = true)
     private String email;
 
-    @NotBlank
-    private String username;
-
-    @NotBlank
+    @Column(name = "PASSWORD", length = 100, nullable = false)
     private String password;
 
-    public User() {
-    }
+    @Column(name = "USERNAME", length = 100, nullable = false, unique = true)
+    private String username;
 
-    public User(Long id, String name, String lastName, String email) {
-        this.id = id;
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
-    }
+    @ManyToOne(targetEntity = Role.class)
+    private Role role;
+
+    @OneToMany(targetEntity = UserFavoriteProduct.class, mappedBy = "user")
+    private List<UserFavoriteProduct> userFavoriteProducts;
 
     public Long getId() {
         return id;
@@ -70,6 +64,14 @@ public class User {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -78,11 +80,19 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public Role getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<UserFavoriteProduct> getUserFavoriteProducts() {
+        return userFavoriteProducts;
+    }
+
+    public void setUserFavoriteProducts(List<UserFavoriteProduct> userFavoriteProducts) {
+        this.userFavoriteProducts = userFavoriteProducts;
     }
 }
