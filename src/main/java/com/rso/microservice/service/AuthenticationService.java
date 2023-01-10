@@ -1,25 +1,35 @@
 package com.rso.microservice.service;
 
+import com.rso.microservice.api.dto.LoginRequestDto;
+import com.rso.microservice.api.dto.LoginResponseDto;
+import com.rso.microservice.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationService {
 
-//    private final UserRepository userRepository;
+    private final JwtService jwtService;
+    private final UserService userService;
 
-//    private final AuthenticationManager authenticationManager;
+    public AuthenticationService(JwtService jwtService, UserService userService) {
+        this.jwtService = jwtService;
+        this.userService = userService;
+    }
 
-//    public AuthenticationService(UserRepository userRepository, AuthenticationManager authenticationManager) {
-//        this.userRepository = userRepository;
-////        this.authenticationManager = authenticationManager;
-//    }
+    public LoginResponseDto login(LoginRequestDto loginRequest) {
+        // todo: do login
+        LoginResponseDto loginResponseDto = new LoginResponseDto();
+        loginResponseDto.setAccessToken(jwtService.createNewJwtToken("aljaz.smaljcelj7@gmail.com"));
+        return loginResponseDto;
+    }
 
-    public void login(String username, String password) {
-//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-//
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-
+    public boolean checkRole(String role, String jwt) {
+        String actualJwt = jwt.split("Bearer ")[1];
+        String email = jwtService.parseJwtToken(actualJwt);
+        User u = userService.getUserByEmail(email);
+        // todo: check role for user
+        return true;
     }
 
 }

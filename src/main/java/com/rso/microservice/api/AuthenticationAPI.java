@@ -1,6 +1,7 @@
 package com.rso.microservice.api;
 
 import com.rso.microservice.api.dto.*;
+import com.rso.microservice.service.AuthenticationService;
 import com.rso.microservice.util.ValidationUtil;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +27,9 @@ import javax.validation.Valid;
         version = "0.1"))
 @Tag(name = "Authentication")
 public class AuthenticationAPI {
+
+    @Autowired
+    private AuthenticationService authenticationService;
 
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -58,8 +63,7 @@ public class AuthenticationAPI {
                     content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequest) {
-        // todo: add code here
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.login(loginRequest));
     }
 
     @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -90,8 +94,9 @@ public class AuthenticationAPI {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
-    public ResponseEntity<LoginResponseDto> checkUserRole(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt, @Valid @RequestBody CheckUserRoleRequestDto checkUserRoleRequest) {
+    public ResponseEntity<MessageDto> checkUserRole(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt, @Valid @RequestBody CheckUserRoleRequestDto checkUserRoleRequest) {
         // todo: add code here
+        authenticationService.checkRole(checkUserRoleRequest.getRole(), jwt);
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
