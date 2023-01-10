@@ -14,7 +14,7 @@ spec:
         app: authentication
     spec:
       containers:
-        - image: as9721/authentication:2022-11-16-21-23-10
+        - image: as9721/authentication:2023-01-10-02-15-57
           name: authentication
           ports:
             - containerPort: 8080
@@ -54,7 +54,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 8082
+    - port: 8080
       protocol: TCP
       targetPort: server
   selector:
