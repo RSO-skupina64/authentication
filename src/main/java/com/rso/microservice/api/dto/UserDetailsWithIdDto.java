@@ -5,8 +5,13 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
-public class UserDetailsDto {
+public class UserDetailsWithIdDto {
+
+    @JsonProperty("id_user")
+    @NotNull(message = "is required")
+    private Long idUser;
 
     @JsonProperty("email")
     @NotBlank(message = "is required.")
@@ -25,6 +30,14 @@ public class UserDetailsDto {
     @NotBlank(message = "is required.")
     @Length(min = 5, max = 20)
     private String username;
+
+    public Long getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(Long idUser) {
+        this.idUser = idUser;
+    }
 
     public String getEmail() {
         return email;

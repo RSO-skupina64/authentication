@@ -1,9 +1,6 @@
 package com.rso.microservice.api;
 
-import com.rso.microservice.api.dto.ChangePasswordRequestDto;
-import com.rso.microservice.api.dto.ErrorDto;
-import com.rso.microservice.api.dto.MessageDto;
-import com.rso.microservice.api.dto.UserDetailsDto;
+import com.rso.microservice.api.dto.*;
 import com.rso.microservice.api.mapper.UserProfileMapper;
 import com.rso.microservice.service.UserProfileService;
 import com.rso.microservice.util.ValidationUtil;
@@ -51,11 +48,12 @@ public class UserProfileAPI {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
-    public ResponseEntity<UserDetailsDto> getUserProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt) {
+    public ResponseEntity<UserDetailsWithIdDto> getUserProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt) {
         log.info("getUserProfile: ENTRY");
-        UserDetailsDto userDetails = userProfileMapper.toModel(userProfileService.getUserFromJwt(jwt));
+        UserDetailsWithIdDto userDetailsWithId = userProfileMapper.toModelUserDetailsWithIdDto(
+                userProfileService.getUserFromJwt(jwt));
         log.info("getUserProfile: EXIT");
-        return ResponseEntity.status(HttpStatus.OK).body(userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(userDetailsWithId);
     }
 
     @PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -73,7 +71,8 @@ public class UserProfileAPI {
     public ResponseEntity<?> updateUserProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt,
                                                @Valid @RequestBody UserDetailsDto userDetails) {
         log.info("updateUserProfile: ENTRY");
-        userDetails = userProfileMapper.toModel(userProfileService.updateUser(jwt, userProfileMapper.toModel(userDetails)));
+        userDetails = userProfileMapper.toModelUserDetailsDto(
+                userProfileService.updateUser(jwt, userProfileMapper.toModel(userDetails)));
         log.info("updateUserProfile: EXIT");
         return ResponseEntity.status(HttpStatus.OK).body(userDetails);
     }
@@ -92,7 +91,8 @@ public class UserProfileAPI {
     public ResponseEntity<?> changePassword(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt,
                                             @Valid @RequestBody ChangePasswordRequestDto changePasswordRequest) {
         log.info("changePassword: ENTRY");
-        ValidationUtil.checkPasswordMatch(changePasswordRequest.getNewPassword(), changePasswordRequest.getRepeatPassword());
+        ValidationUtil.checkPasswordMatch(changePasswordRequest.getNewPassword(),
+                changePasswordRequest.getRepeatPassword());
         userProfileService.updatePassword(jwt, changePasswordRequest.getNewPassword());
         log.info("changePassword: EXIT");
         return ResponseEntity.status(HttpStatus.OK).body(new MessageDto("changePassword completed"));
