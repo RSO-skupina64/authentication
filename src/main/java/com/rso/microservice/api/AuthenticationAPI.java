@@ -37,7 +37,6 @@ public class AuthenticationAPI {
 
     final AuthenticationMapper authenticationMapper;
 
-    @Autowired
     public AuthenticationAPI(AuthenticationService authenticationService, AuthenticationMapper authenticationMapper) {
         this.authenticationService = authenticationService;
         this.authenticationMapper = authenticationMapper;
