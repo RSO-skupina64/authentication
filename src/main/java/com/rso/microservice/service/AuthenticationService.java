@@ -27,8 +27,7 @@ public class AuthenticationService {
     }
 
     public boolean checkRole(String role, String jwt) {
-        String actualJwt = jwt.split("Bearer ")[1];
-        String email = jwtService.parseJwtToken(actualJwt);
+        String email = jwtService.parseJwtToken(jwt);
         User user = userService.findByEmail(email);
         if (user.getRole() != null) {
             return user.getRole().getName().equals(role);
