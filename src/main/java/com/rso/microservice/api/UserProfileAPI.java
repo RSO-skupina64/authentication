@@ -5,7 +5,6 @@ import com.rso.microservice.api.dto.ErrorDto;
 import com.rso.microservice.api.dto.MessageDto;
 import com.rso.microservice.api.dto.UserDetailsDto;
 import com.rso.microservice.api.mapper.UserProfileMapper;
-import com.rso.microservice.entity.User;
 import com.rso.microservice.service.UserProfileService;
 import com.rso.microservice.util.ValidationUtil;
 import io.swagger.v3.oas.annotations.Operation;
