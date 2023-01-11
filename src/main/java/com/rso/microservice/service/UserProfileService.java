@@ -15,8 +15,7 @@ public class UserProfileService {
     }
 
     public User getUserFromJwt(String jwt) {
-        String actualJwt = jwt.split("Bearer ")[1];
-        String email = jwtService.parseJwtToken(actualJwt);
+        String email = jwtService.parseJwtToken(jwt);
         if (email != null) {
             return userService.findByEmail(email);
         }
