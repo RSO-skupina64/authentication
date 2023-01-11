@@ -2,7 +2,12 @@ package com.rso.microservice.api;
 
 import com.rso.microservice.api.dto.ChangePasswordRequestDto;
 import com.rso.microservice.api.dto.ErrorDto;
+import com.rso.microservice.api.dto.MessageDto;
 import com.rso.microservice.api.dto.UserDetailsDto;
+import com.rso.microservice.api.mapper.UserProfileMapper;
+import com.rso.microservice.entity.User;
+import com.rso.microservice.service.UserProfileService;
+import com.rso.microservice.util.ValidationUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,7 +30,16 @@ import javax.validation.Valid;
 public class UserProfileAPI {
     private static final Logger log = LoggerFactory.getLogger(UserProfileAPI.class);
 
-    @GetMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    final UserProfileService userProfileService;
+
+    final UserProfileMapper userProfileMapper;
+
+    public UserProfileAPI(UserProfileService userProfileService, UserProfileMapper userProfileMapper) {
+        this.userProfileService = userProfileService;
+        this.userProfileMapper = userProfileMapper;
+    }
+
+    @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get logged in User extended info",
             description = "Get profile information about currently logged in user")
     @ApiResponses({
@@ -40,9 +54,9 @@ public class UserProfileAPI {
     })
     public ResponseEntity<UserDetailsDto> getUserProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt) {
         log.info("getUserProfile: ENTRY");
-        // todo: add code here
+        UserDetailsDto userDetails = userProfileMapper.toModel(userProfileService.getUserFromJwt(jwt));
         log.info("getUserProfile: EXIT");
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        return ResponseEntity.status(HttpStatus.OK).body(userDetails);
     }
 
     @PutMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,9 +74,9 @@ public class UserProfileAPI {
     public ResponseEntity<?> updateUserProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt,
                                                @Valid @RequestBody UserDetailsDto userDetails) {
         log.info("updateUserProfile: ENTRY");
-        // todo: add code here
+        userDetails = userProfileMapper.toModel(userProfileService.updateUser(jwt, userProfileMapper.toModel(userDetails)));
         log.info("updateUserProfile: EXIT");
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        return ResponseEntity.status(HttpStatus.OK).body(userDetails);
     }
 
     @PutMapping(value = "/user/change-password", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -79,8 +93,9 @@ public class UserProfileAPI {
     public ResponseEntity<?> changePassword(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt,
                                             @Valid @RequestBody ChangePasswordRequestDto changePasswordRequest) {
         log.info("changePassword: ENTRY");
-        // todo: add code here
+        ValidationUtil.checkPasswordMatch(changePasswordRequest.getNewPassword(), changePasswordRequest.getRepeatPassword());
+        userProfileService.updatePassword(jwt, changePasswordRequest.getNewPassword());
         log.info("changePassword: EXIT");
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageDto("changePassword completed"));
     }
 }

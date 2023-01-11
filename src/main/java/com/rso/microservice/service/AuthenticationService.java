@@ -22,6 +22,7 @@ public class AuthenticationService {
         if (user != null && user.getPassword().equals(loginRequest.getPassword())) {
             loginResponseDto.setAccessToken(jwtService.createNewJwtToken(user.getEmail()));
         }
+
         return loginResponseDto;
     }
 
