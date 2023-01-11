@@ -1,6 +1,7 @@
 package com.rso.microservice.api;
 
 import com.rso.microservice.api.dto.*;
+import com.rso.microservice.api.mapper.AuthenticationMapper;
 import com.rso.microservice.service.AuthenticationService;
 import com.rso.microservice.util.ValidationUtil;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -11,6 +12,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.aspectj.bridge.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,9 +31,17 @@ import javax.validation.Valid;
         version = "0.1"))
 @Tag(name = "Authentication")
 public class AuthenticationAPI {
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationAPI.class);
+
+    final AuthenticationService authenticationService;
+
+    final AuthenticationMapper authenticationMapper;
 
     @Autowired
-    private AuthenticationService authenticationService;
+    public AuthenticationAPI(AuthenticationService authenticationService, AuthenticationMapper authenticationMapper) {
+        this.authenticationService = authenticationService;
+        this.authenticationMapper = authenticationMapper;
+    }
 
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,9 +56,11 @@ public class AuthenticationAPI {
                     content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     public ResponseEntity<MessageDto> register(@Valid @RequestBody RegistrationRequestDto registrationRequest) {
-        // todo: add code here
+        log.info("register: ENTRY");
         ValidationUtil.checkPasswordMatch(registrationRequest.getPassword(), registrationRequest.getRepeatPassword());
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        authenticationService.register(authenticationMapper.toModel(registrationRequest));
+        log.info("register: EXIT");
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageDto("register completed"));
     }
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -63,22 +77,10 @@ public class AuthenticationAPI {
                     content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequest) {
-        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.login(loginRequest));
-    }
-
-    @PostMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Logout current user",
-            description = "Log out an user from the application")
-    @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Log out successful"),
-            @ApiResponse(responseCode = "400", description = "Log out failed",
-                    content = @Content(schema = @Schema(implementation = ErrorDto.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error",
-                    content = @Content(schema = @Schema(implementation = ErrorDto.class)))
-    })
-    public ResponseEntity<?> logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt) {
-        // todo: add code here
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        log.info("login: ENTRY");
+        LoginResponseDto loginResponse = authenticationService.login(loginRequest);
+        log.info("login: EXIT");
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
     }
 
     @PostMapping(value = "/check-user-role", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -94,10 +96,17 @@ public class AuthenticationAPI {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
-    public ResponseEntity<MessageDto> checkUserRole(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt, @Valid @RequestBody CheckUserRoleRequestDto checkUserRoleRequest) {
-        // todo: add code here
-        authenticationService.checkRole(checkUserRoleRequest.getRole(), jwt);
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ResponseEntity<MessageDto> checkUserRole(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt,
+                                                    @Valid @RequestBody CheckUserRoleRequestDto checkUserRoleRequest) {
+        log.info("checkUserRole: ENTRY");
+        MessageDto message;
+        if (authenticationService.checkRole(checkUserRoleRequest.getRole(), jwt)) {
+            message = new MessageDto("checkUserRole completed, user is in role");
+        } else {
+            message = new MessageDto("checkUserRole completed, user is not in role");
+        }
+        log.info("checkUserRole: EXIT");
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
 }
