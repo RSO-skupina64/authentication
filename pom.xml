@@ -14,10 +14,12 @@
     <name>authentication</name>
     <properties>
         <java.version>17</java.version>
-		<springdoc.version>1.6.11</springdoc.version>
+        <springdoc.version>1.6.11</springdoc.version>
         <springboot.validation.version>2.7.5</springboot.validation.version>
         <springboot.security.version>2.7.5</springboot.security.version>
         <springboot.jpa.version>2.7.5</springboot.jpa.version>
+        <mysql.connector.version>8.0.31</mysql.connector.version>
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
         <jsonwebtoken.security.version>0.9.1</jsonwebtoken.security.version>
         <springboot.config.version>3.1.5</springboot.config.version>
         <spring.cloud.dependencies.version>2021.0.5</spring.cloud.dependencies.version>
@@ -44,7 +46,14 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.connector.version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
         </dependency>
 
         <dependency>
@@ -145,6 +154,23 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
         </plugins>
         <finalName>authentication</finalName>

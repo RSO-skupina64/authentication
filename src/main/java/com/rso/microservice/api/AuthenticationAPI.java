@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.aspectj.bridge.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +57,8 @@ public class AuthenticationAPI {
     })
     public ResponseEntity<MessageDto> register(@Valid @RequestBody RegistrationRequestDto registrationRequest) {
         log.info("register: ENTRY");
-        authenticationService.register(authenticationMapper.toModel(registrationRequest));
         ValidationUtil.checkPasswordMatch(registrationRequest.getPassword(), registrationRequest.getRepeatPassword());
+        authenticationService.register(authenticationMapper.toModel(registrationRequest));
         log.info("register: EXIT");
         return ResponseEntity.status(HttpStatus.OK).body(new MessageDto("register completed"));
     }
@@ -77,9 +78,9 @@ public class AuthenticationAPI {
     })
     public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginRequestDto loginRequest) {
         log.info("login: ENTRY");
-        // todo: add code here
+        LoginResponseDto loginResponse = authenticationService.login(loginRequest);
         log.info("login: EXIT");
-        return ResponseEntity.status(HttpStatus.OK).body(authenticationService.login(loginRequest));
+        return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
     }
 
     @PostMapping(value = "/check-user-role", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -98,10 +99,14 @@ public class AuthenticationAPI {
     public ResponseEntity<MessageDto> checkUserRole(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt,
                                                     @Valid @RequestBody CheckUserRoleRequestDto checkUserRoleRequest) {
         log.info("checkUserRole: ENTRY");
-        // todo: add code here
-        authenticationService.checkRole(checkUserRoleRequest.getRole(), jwt);
+        MessageDto message;
+        if (authenticationService.checkRole(checkUserRoleRequest.getRole(), jwt)) {
+            message = new MessageDto("checkUserRole completed, user is in role");
+        } else {
+            message = new MessageDto("checkUserRole completed, user is not in role");
+        }
         log.info("checkUserRole: EXIT");
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageDto("checkUserRole completed"));
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
 }

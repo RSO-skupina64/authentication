@@ -4,8 +4,6 @@ import com.rso.microservice.entity.User;
 import com.rso.microservice.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserService {
 
@@ -15,8 +13,12 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
-	public User getUserByEmail(String email) {
+	public User findByEmail(String email) {
 		return userRepository.findByEmail(email);
+	}
+
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username);
 	}
 
 	public User createUser(User user) {
