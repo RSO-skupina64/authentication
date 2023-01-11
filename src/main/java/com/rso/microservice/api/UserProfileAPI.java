@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +23,7 @@ import javax.validation.Valid;
 @RequestMapping("/profile")
 @Tag(name = "Profile")
 public class UserProfileAPI {
+    private static final Logger log = LoggerFactory.getLogger(UserProfileAPI.class);
 
     @GetMapping(value = "/user", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get logged in User extended info",
@@ -36,7 +39,9 @@ public class UserProfileAPI {
                     content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
     public ResponseEntity<UserDetailsDto> getUserProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt) {
+        log.info("getUserProfile: ENTRY");
         // todo: add code here
+        log.info("getUserProfile: EXIT");
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
@@ -52,8 +57,11 @@ public class UserProfileAPI {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
-    public ResponseEntity<?> updateUserProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt, @Valid @RequestBody UserDetailsDto userDetails) {
+    public ResponseEntity<?> updateUserProfile(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt,
+                                               @Valid @RequestBody UserDetailsDto userDetails) {
+        log.info("updateUserProfile: ENTRY");
         // todo: add code here
+        log.info("updateUserProfile: EXIT");
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
@@ -68,8 +76,11 @@ public class UserProfileAPI {
             @ApiResponse(responseCode = "500", description = "Internal server error",
                     content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     })
-    public ResponseEntity<?> changePassword(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt, @Valid @RequestBody ChangePasswordRequestDto changePasswordRequest) {
+    public ResponseEntity<?> changePassword(@RequestHeader(HttpHeaders.AUTHORIZATION) String jwt,
+                                            @Valid @RequestBody ChangePasswordRequestDto changePasswordRequest) {
+        log.info("changePassword: ENTRY");
         // todo: add code here
+        log.info("changePassword: EXIT");
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 }
